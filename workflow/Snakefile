@@ -1,6 +1,8 @@
 import os
 
+
 configfile: "config/config.yaml"
+
 
 resources = os.path.join(os.getcwd(), config["resources"])
 results = os.path.join(os.getcwd(), config["results"])
@@ -12,35 +14,36 @@ receptors = [x.split(".")[0] for x in os.listdir(receptor_dir) if x.endswith(".p
 ligands = [x.split(".")[0] for x in os.listdir(ligand_dir) if x.endswith(".smi")]
 
 
-
 rule all:
     input:
-        expand("{results}/run_qvina/{receptor}_{ligand}.pdbqt", results=results, receptor=receptors, ligand=ligands)
+        expand("{results}/run_qvina/{receptor}_{ligand}.pdbqt", results=results, receptor=receptors, ligand=ligands),
 
 
 rule prepare_receptors:
     input:
-        f"{resources}/receptors/{{receptor}}.pdb"
+        f"{resources}/receptors/{{receptor}}.pdb",
     output:
-        f"{results}/prepare_receptors/{{receptor}}.pdbqt"
+        f"{results}/prepare_receptors/{{receptor}}.pdbqt",
     conda:
         "envs/mgltools.yml"
     shell:
         "prepare_receptor4.py -r {input} -o {output}"
 
+
 rule smiles_to_pdb:
     input:
-        f"{resources}/ligands/{{ligand}}.smi"
+        f"{resources}/ligands/{{ligand}}.smi",
     output:
-        f"{results}/smiles_to_pdb/{{ligand}}.pdb"
+        f"{results}/smiles_to_pdb/{{ligand}}.pdb",
     shell:
         "obabel -ismi {input} -opdb -O {output} --gen3D"
 
+
 rule prepare_ligands:
     input:
-        rules.smiles_to_pdb.output
+        rules.smiles_to_pdb.output,
     output:
-        f"{results}/prepare_ligands/{{ligand}}.pdbqt"
+        f"{results}/prepare_ligands/{{ligand}}.pdbqt",
     conda:
         "envs/mgltools.yml"
     message:
@@ -48,14 +51,15 @@ rule prepare_ligands:
     shell:
         f"cd {results}/smiles_to_pdb;prepare_ligand4.py -l {{input}} -o {{output}}"
 
+
 rule run_qvina:
     input:
-        receptor = rules.prepare_receptors.output,
-        ligand = rules.prepare_ligands.output,
+        receptor=rules.prepare_receptors.output,
+        ligand=rules.prepare_ligands.output,
     output:
-        f"{results}/run_qvina/{{receptor}}_{{ligand}}.pdbqt"
+        f"{results}/run_qvina/{{receptor}}_{{ligand}}.pdbqt",
     log:
-        f"{results}/run_qvina_log/{{receptor}}_{{ligand}}.txt"
+        f"{results}/run_qvina_log/{{receptor}}_{{ligand}}.txt",
     shell:
         """{config[vina][path]} --receptor {input.receptor} --ligand {input.ligand} \
         --exhaustiveness {config[vina][exhaustiveness]} \
