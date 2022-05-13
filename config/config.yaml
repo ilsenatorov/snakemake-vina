@@ -1,0 +1,7 @@
+resources: datasets/test/resources
+results: datasets/test/results
+
+vina:
+  exhaustiveness: 3
+  # path to the vina executable (can be also a fork like qvina or smina)
+  path: qvina-w
