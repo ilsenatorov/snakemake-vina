@@ -16,7 +16,7 @@ ligands = [x.split(".")[0] for x in os.listdir(ligand_dir) if x.endswith(".smi")
 
 rule all:
     input:
-        expand("{results}/run_qvina/{receptor}_{ligand}.pdbqt", results=results, receptor=receptors, ligand=ligands),
+        expand("{results}/run_qvina/{receptor}_{ligand}.pdb", results=results, receptor=receptors, ligand=ligands),
 
 
 rule prepare_receptors:
@@ -57,7 +57,7 @@ rule run_qvina:
         receptor=rules.prepare_receptors.output,
         ligand=rules.prepare_ligands.output,
     output:
-        f"{results}/run_qvina/{{receptor}}_{{ligand}}.pdbqt",
+        f"{results}/run_qvina/{{receptor}}_{{ligand}}.pdb",
     log:
         f"{results}/run_qvina_log/{{receptor}}_{{ligand}}.txt",
     shell:

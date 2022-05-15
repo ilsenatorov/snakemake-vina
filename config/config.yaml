@@ -1,5 +1,5 @@
-resources: datasets/test/resources
-results: datasets/test/results
+resources: datasets/top10x10/resources
+results: datasets/top10x10/results
 
 vina:
   exhaustiveness: 3
