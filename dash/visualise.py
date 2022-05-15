@@ -11,7 +11,7 @@ from dash.dependencies import Input, Output
 from dash.exceptions import PreventUpdate
 
 receptor_path = "file:/home/ilya/Projects/docking/datasets/top10x10/resources/receptors/"
-ligand_path = "file:/home/ilya/Projects/docking/datasets/top10x10/results/run_qvina/"
+ligand_path = "file:/home/ilya/Projects/docking/datasets/top10x10/results/run_vina/"
 
 app = dash.Dash(__name__)
 

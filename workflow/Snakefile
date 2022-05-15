@@ -16,7 +16,7 @@ ligands = [x.split(".")[0] for x in os.listdir(ligand_dir) if x.endswith(".smi")
 
 rule all:
     input:
-        expand("{results}/run_qvina/{receptor}_{ligand}.pdb", results=results, receptor=receptors, ligand=ligands),
+        expand("{results}/run_vina/{receptor}_{ligand}.pdb", results=results, receptor=receptors, ligand=ligands),
 
 
 rule prepare_receptors:
@@ -52,14 +52,14 @@ rule prepare_ligands:
         f"cd {results}/smiles_to_pdb;prepare_ligand4.py -l {{input}} -o {{output}}"
 
 
-rule run_qvina:
+rule run_vina:
     input:
         receptor=rules.prepare_receptors.output,
         ligand=rules.prepare_ligands.output,
     output:
-        f"{results}/run_qvina/{{receptor}}_{{ligand}}.pdb",
+        f"{results}/run_vina/{{receptor}}_{{ligand}}.pdb",
     log:
-        f"{results}/run_qvina_log/{{receptor}}_{{ligand}}.txt",
+        f"{results}/run_vina_log/{{receptor}}_{{ligand}}.txt",
     shell:
         """{config[vina][path]} --receptor {input.receptor} --ligand {input.ligand} \
         --exhaustiveness {config[vina][exhaustiveness]} \
