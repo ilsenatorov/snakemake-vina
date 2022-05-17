@@ -1,27 +1,32 @@
-import os
 import re
-import numpy as np
+
 import pandas as pd
 
 
 class VinaParser:
-    def __init__(self, filename):
+    """Parses the logs of vina"""
+
+    def __init__(self, filename: str):
         self.filename = filename
         basename = filename.split("/")[-1].split(".")[0]
         self.prot, self.lig = basename.split("_")
         self.read_file()
 
     def read_file(self):
+        """Reads the file and stores the text"""
         with open(self.filename, "r") as file:
             self.text = file.read()
 
-    def get_runtime(self):
-        return float(re.search("in\s(\d+\.\d+)\sseconds\n", self.text).groups()[0])
+    def get_runtime(self) -> float:
+        """Returns the runtime of the vina run"""
+        return float(re.search(r"in\s(\d+\.\d+)\sseconds\n", self.text).groups()[0])
 
-    def get_top_score(self):
-        return float(re.search("1\s+(\-*\d+\.\d+)\s+", self.text).groups()[0])
+    def get_top_score(self) -> float:
+        """Returns the top score of the vina run"""
+        return float(re.search(r"1\s+(\-*\d+\.\d+)\s+", self.text).groups()[0])
 
-    def run(self):
+    def run(self) -> dict:
+        """Returns a dictionary with the results of the vina run"""
         return dict(
             prot=self.prot,
             lig=self.lig,

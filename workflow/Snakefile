@@ -18,6 +18,7 @@ rule all:
     input:
         f"{results}/combine_results/summary.csv",
 
+
 rule prepare_receptors:
     input:
         f"{resources}/receptors/{{receptor}}.pdb",
