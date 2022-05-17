@@ -2,6 +2,6 @@ resources: datasets/top10x10/resources
 results: datasets/top10x10/results
 
 vina:
-  exhaustiveness: 3
+  exhaustiveness: 10
   # path to the vina executable (can be also a fork like qvina or smina)
   path: qvina-w

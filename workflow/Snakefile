@@ -16,8 +16,7 @@ ligands = [x.split(".")[0] for x in os.listdir(ligand_dir) if x.endswith(".smi")
 
 rule all:
     input:
-        expand("{results}/run_vina/{receptor}_{ligand}.pdb", results=results, receptor=receptors, ligand=ligands),
-
+        f"{results}/combine_results/summary.csv",
 
 rule prepare_receptors:
     input:
@@ -57,11 +56,19 @@ rule run_vina:
         receptor=rules.prepare_receptors.output,
         ligand=rules.prepare_ligands.output,
     output:
-        f"{results}/run_vina/{{receptor}}_{{ligand}}.pdb",
-    log:
-        f"{results}/run_vina_log/{{receptor}}_{{ligand}}.txt",
+        pose=f"{results}/run_vina/{{receptor}}_{{ligand}}.pdbqt",
+        log=f"{results}/run_vina_log/{{receptor}}_{{ligand}}.txt",
     shell:
         """{config[vina][path]} --receptor {input.receptor} --ligand {input.ligand} \
         --exhaustiveness {config[vina][exhaustiveness]} \
         --out {output} --config config/config.txt \
         --log {log} > /dev/null 2>&1"""
+
+
+rule combine_results:
+    input:
+        expand("{results}/run_vina_log/{receptor}_{ligand}.txt", results=results, receptor=receptors, ligand=ligands),
+    output:
+        f"{results}/combine_results/summary.csv",
+    script:
+        "scripts/combine_results.py"
