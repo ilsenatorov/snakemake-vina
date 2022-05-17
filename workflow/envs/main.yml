@@ -235,4 +235,3 @@ dependencies:
     - tqdm==4.64.0
     - virtualenv==20.14.1
     - werkzeug==2.1.2
-prefix: /home/ilya/miniconda3/envs/vina

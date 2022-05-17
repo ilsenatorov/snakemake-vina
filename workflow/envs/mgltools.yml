@@ -4,4 +4,3 @@ channels:
   - defaults
 dependencies:
   - mgltools=1.5.7=h9ee0642_1
-prefix: /home/ilya/miniconda3/envs/mgltools
